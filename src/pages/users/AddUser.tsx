@@ -123,8 +123,6 @@ export default function AddUser() {
                 </SelectTrigger>
                 <SelectContent className="w-full">
                   <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="omborchi">Omborchi</SelectItem>
-                  <SelectItem value="sotuvchi">Sotuvchi</SelectItem>
                   <SelectItem value="ishchi">ishchi</SelectItem>
                 </SelectContent>
               </Select>
@@ -161,10 +159,32 @@ export default function AddUser() {
 
         {/* Salary Inputs */}
         <div>
-          <Input
-            type="number"
-            placeholder="Maosh miqdori"
-            {...register("salary_amount", { required: "Maosh miqdori shart" })}
+          <Controller
+            name="salary_amount"
+            control={control}
+            defaultValue={"0"}
+            rules={{
+              required: "Qiymat majburiy",
+              min: { value: 0.01, message: "Qiymat 0 dan katta bo‘lishi kerak" },
+              max: { value: 100000000, message: "Qiymat juda katta" },
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => {
+              const formatter = new Intl.NumberFormat("en-US");
+              return (
+                <div>
+                  <Input
+                    type="text"
+                    value={value ? formatter.format(Number(value)) : ""}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/,/g, "").replace(/\s/g, "");
+                      onChange(Number(val));
+                    }}
+                    placeholder="Masalan: 1,000,000.00"
+                  />
+                  {error && <p style={{ color: "red" }}>{error.message}</p>}
+                </div>
+              );
+            }}
           />
           {errors.salary_amount && (
             <p className="text-red-500 text-sm">

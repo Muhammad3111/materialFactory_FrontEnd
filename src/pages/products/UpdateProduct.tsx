@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,13 @@ import { getProductById, updateProduct } from "@/features/products/products";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { DeleteProduct } from "./DeleteProduct";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function UpdateProduct() {
   const {
@@ -14,6 +21,7 @@ export default function UpdateProduct() {
     handleSubmit,
     reset,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<Product>();
   const { id } = useParams<{ id: string }>();
@@ -31,7 +39,7 @@ export default function UpdateProduct() {
       setValue("name", product.name);
       setValue("category", product.category);
       setValue("quantity", product.quantity);
-      setValue("price", product.price);
+      setValue("unit", product.unit);
       setValue("low_stock_threshold", product.low_stock_threshold);
     }
   });
@@ -101,25 +109,34 @@ export default function UpdateProduct() {
         </div>
 
         <div>
-          <Input
-            type="number"
-            placeholder="Narx"
-            {...register("price", {
-              required: "Narx shart",
-              valueAsNumber: true,
-            })}
+          <Controller
+            name="unit"
+            control={control}
+            rules={{ required: "Mahsulot birligini tanlash shart" }}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="text-base w-full">
+                  <SelectValue placeholder="Mahsulot birligi" />
+                </SelectTrigger>
+                <SelectContent className="w-full">
+                  <SelectItem value="metr">M</SelectItem>
+                  <SelectItem value="kg">Kg</SelectItem>
+                  <SelectItem value="santimetr">Sm</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           />
-          {errors.price && (
-            <p className="text-red-500 text-sm">{errors.price.message}</p>
+          {errors.unit && (
+            <p className="text-red-500 text-sm">{errors.unit.message}</p>
           )}
         </div>
 
         <div>
           <Input
             type="number"
-            placeholder="Minimal miqdor (threshold)"
+            placeholder="Minimal miqdor"
             {...register("low_stock_threshold", {
-              required: "Threshold shart",
+              required: "Minimal miqdor shart",
               valueAsNumber: true,
             })}
           />

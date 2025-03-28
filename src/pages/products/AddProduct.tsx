@@ -1,15 +1,23 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { addProduct } from "@/features/products/products";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AddProduct() {
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<Product>();
 
@@ -76,25 +84,34 @@ export default function AddProduct() {
         </div>
 
         <div>
-          <Input
-            type="number"
-            placeholder="Narx"
-            {...register("price", {
-              required: "Narx shart",
-              valueAsNumber: true,
-            })}
+          <Controller
+            name="unit"
+            control={control}
+            rules={{ required: "Mahsulot birligini tanlash shart" }}
+            render={({ field }) => (
+              <Select onValueChange={field.onChange} value={field.value}>
+                <SelectTrigger className="text-base w-full">
+                  <SelectValue placeholder="Mahsulot birligi" />
+                </SelectTrigger>
+                <SelectContent className="w-full">
+                  <SelectItem value="metr">M</SelectItem>
+                  <SelectItem value="kg">Kg</SelectItem>
+                  <SelectItem value="santimetr">Sm</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
           />
-          {errors.price && (
-            <p className="text-red-500 text-sm">{errors.price.message}</p>
+          {errors.unit && (
+            <p className="text-red-500 text-sm">{errors.unit.message}</p>
           )}
         </div>
 
         <div>
           <Input
             type="number"
-            placeholder="Minimal miqdor (threshold)"
+            placeholder="Minimal miqdor"
             {...register("low_stock_threshold", {
-              required: "Threshold shart",
+              required: "Minimal miqdor shart",
               valueAsNumber: true,
             })}
           />

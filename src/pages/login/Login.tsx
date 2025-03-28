@@ -38,7 +38,12 @@ const Login = () => {
       setUser(response.data); // Statega saqlaymiz
 
       toast.success("Kirish muvaffaqiyatli!");
-      navigate("/"); // Dashboardga yo‘naltiramiz
+
+      if (response.data.role === "admin") {
+        return navigate("/");
+      } else {
+        return navigate("/dashboard");
+      }
     } catch (error) {
       toast.error("Login yoki parol noto‘g‘ri!");
       console.log(error);

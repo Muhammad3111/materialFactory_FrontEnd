@@ -35,7 +35,7 @@ export default function Users() {
   };
 
   return (
-    <div className="pt-16 px-4 flex flex-col gap-4">
+    <div className="pt-18 pb-20 px-4 flex flex-col gap-4">
       {/* 🔍 Qidiruv input */}
       <div>
         <Input

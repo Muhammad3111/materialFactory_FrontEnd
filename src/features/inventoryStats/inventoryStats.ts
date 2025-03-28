@@ -1,6 +1,6 @@
 import api from "@/api/axiosIntstance";
 
 export const getInvetoryStats = async () => {
-  const response = await api.get("/inventory/stats");
+  const response = await api.get("/inventoryStats");
   return response.data;
 };

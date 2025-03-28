@@ -33,7 +33,7 @@ export default function Products() {
   };
 
   return (
-    <div className="pt-16 px-4 flex flex-col gap-4">
+    <div className="pt-18 px-4 flex flex-col gap-4">
       {/* 🔍 Qidiruv input */}
       <div>
         <Input
@@ -81,12 +81,10 @@ export default function Products() {
                   <span className="font-semibold">{product.category}</span>
                 </div>
                 <div className="flex gap-2 items-center">
-                  <span>Narxi:</span>
-                  <span className="font-semibold">{product.price}</span>
-                </div>
-                <div className="flex gap-2 items-center">
                   <span>Soni:</span>
-                  <span className="font-semibold">{product.quantity}</span>
+                  <span className="font-semibold">
+                    {product.quantity} {product.unit}
+                  </span>
                 </div>
                 <div className="flex justify-between items-start">
                   <div className="flex gap-2 items-center">

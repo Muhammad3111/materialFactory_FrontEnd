@@ -1,4 +1,5 @@
-import { Bell, User } from "lucide-react";
+import ProfileMenu from "@/pages/profile/Profile";
+import { Bell } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
@@ -26,16 +27,8 @@ const Navbar = () => {
       </Link>
 
       {/* O'ng tomonda User Profile */}
-      <NavLink
-        to="/profile"
-        className={({ isActive }) =>
-          `hover:text-blue-500 transition ${
-            isActive ? "text-blue-500" : "text-gray-600"
-          }`
-        }
-      >
-        <User size={24} />
-      </NavLink>
+
+      <ProfileMenu />
     </nav>
   );
 };
