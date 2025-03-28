@@ -13,7 +13,7 @@ export default function ReadWorks() {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["works", user?.id],
-    queryFn: () => getWorkById(user?.id || "0"), // user bo'lmasa 0 yuboriladi
+    queryFn: () => getWorkById(user?.id?.toString() || ""), // user bo'lmasa bo'sh string yuboriladi
     enabled: !!user?.id, // faqat user mavjud bo‘lsa query ishga tushadi
   });
 
