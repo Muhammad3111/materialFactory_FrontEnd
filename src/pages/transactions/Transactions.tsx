@@ -28,7 +28,7 @@ export default function Transactions() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["transactions"],
-    queryFn: () => getAllTransactions(),
+    queryFn: () => getAllTransactions(""),
   });
 
   const navigate = useNavigate();
