@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const socket = io("http://localhost:5000"); // ✅ server manzilini moslashtir
+const socket = io("http://144.91.125.142:5000"); // ✅ server manzilini moslashtir
 
 interface NotificationItem {
   id: number;
