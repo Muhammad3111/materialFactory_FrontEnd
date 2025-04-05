@@ -19,7 +19,7 @@ const MobileMenu = () => {
       roles: ["admin"],
     },
     {
-      path: user?.role === "admin" ? "/inventory" : "/inventory/add-product",
+      path: user?.role === "ishchi" ? "/inventory/add-product" : "/inventory",
       icon: <Archive size={24} />,
       label: "Ombor",
       roles: ["admin", "ishchi", "partner"],
@@ -34,7 +34,7 @@ const MobileMenu = () => {
       path: "/dashboard",
       icon: <Home size={24} />,
       label: "Bosh sahifa",
-      roles: ["ishchi", "partner"],
+      roles: ["ishchi"],
     },
     {
       path: user?.role === "admin" ? "/transactions" : "/transactions/user",

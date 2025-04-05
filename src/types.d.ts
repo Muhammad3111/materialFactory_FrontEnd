@@ -85,5 +85,6 @@ declare type Transaction = {
   description: string;
   user: null | { id: number; fullname: string };
   partner: null | { id: number; name: string };
+  debt: number;
   created_at: string;
 };

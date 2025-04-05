@@ -2,8 +2,8 @@ import api from "@/api/axiosIntstance";
 import { InventoryProductForm } from "@/pages/inventory/AddProductToInventory";
 import { UpdateInventoryProductForm } from "@/pages/inventory/UpdateInventoryProduct";
 
-export const getIncomingProducts = async () => {
-  const response = await api.get("inventoryLogs/incoming");
+export const getIncomingProducts = async (id: number | string) => {
+  const response = await api.get(`inventoryLogs/incoming?partner_id=${id}`);
   return response.data;
 };
 
@@ -12,8 +12,8 @@ export const getInventoryProductById = async (id: string) => {
   return response.data;
 };
 
-export const getOutgoingProducts = async () => {
-  const response = await api.get("inventoryLogs/outgoing");
+export const getOutgoingProducts = async (id: number | string) => {
+  const response = await api.get(`inventoryLogs/outgoing?partner_id=${id}`);
   return response.data;
 };
 

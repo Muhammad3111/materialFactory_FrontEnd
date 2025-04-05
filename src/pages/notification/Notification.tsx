@@ -1,44 +1,18 @@
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import {
+  X,
   Bell,
   Archive,
   DollarSign,
   CheckCircle,
   LogOut,
-  X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-const socket = io("http://144.91.125.142:5000"); // ✅ server manzilini moslashtir
-
-interface NotificationItem {
-  id: number;
-  type:
-    | "inventory_updated"
-    | "transaction_updated"
-    | "attendance_checkin"
-    | "attendance_checkout"
-    | "new_work_report";
-  timestamp: Date;
-}
+import { useUser } from "@/hooks/useUser";
 
 export default function Notification() {
-  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [sound] = useState(() => new Audio("/notification.wav"));
+  const { notifications } = useUser();
 
-  useEffect(() => {
-    socket.on("notification", (data: NotificationItem) => {
-      sound.play();
-      setNotifications((prev) => [...prev, { ...data, timestamp: new Date() }]);
-    });
-
-    return () => {
-      socket.off("notification");
-    };
-  }, [sound]);
-
-  const getStyle = (type: NotificationItem["type"]) => {
+  const getStyle = (type: string) => {
     switch (type) {
       case "inventory_updated":
         return {
@@ -67,7 +41,7 @@ export default function Notification() {
       case "new_work_report":
         return {
           text: "Bajarilgan ish haqida yangi xabar",
-          icon: <LogOut size={18} />,
+          icon: <Bell size={18} />,
           bg: "bg-red-100 border-red-400 text-red-800",
         };
       default:
@@ -79,18 +53,19 @@ export default function Notification() {
     }
   };
 
-  const removeNotification = (timestamp: Date) => {
-    setNotifications((prev) => prev.filter((n) => n.timestamp !== timestamp));
-  };
-
   return (
-    <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3">
+    <div className="pt-20 pb-24 flex flex-col gap-3 px-5">
       <AnimatePresence>
-        {notifications.map((n) => {
+        {notifications.map((n, i) => {
           const { text, icon, bg } = getStyle(n.type);
+          const key =
+            typeof n.timestamp === "string"
+              ? n.timestamp + i
+              : n.timestamp.toISOString() + i;
+
           return (
             <motion.div
-              key={n.timestamp.toISOString()}
+              key={key}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -101,7 +76,7 @@ export default function Notification() {
               <div className="flex-1 text-sm font-medium">{text}</div>
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-black"
-                onClick={() => removeNotification(n.timestamp)}
+                onClick={() => console.log("O‘chirish tugmasi bosildi")}
               >
                 <X size={16} />
               </button>

@@ -40,15 +40,24 @@ export default function Transactions() {
       })
     : [];
 
-  const formatDate = (isoDate: string) => {
+  const formatDateTime = (isoDate: string) => {
     const date = new Date(isoDate);
-    return `${String(date.getDate()).padStart(2, "0")}/${String(
-      date.getMonth() + 1
-    ).padStart(2, "0")}/${date.getFullYear()}`;
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return {
+      date: `${day}/${month}/${year}`,
+      hour: `${hours}:${minutes}`,
+    };
   };
 
   return (
-    <div className="pt-16 px-4 flex flex-col gap-6">
+    <div className="pt-16 pb-24 px-4 flex flex-col gap-6">
       <h1 className="text-xl font-bold text-center">Tranzaksiyalar</h1>
 
       <div className="fixed bottom-25 right-4">
@@ -107,9 +116,21 @@ export default function Transactions() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Sana:</span>
+                  <span className="text-gray-600">Qarz:</span>
                   <span className="font-semibold">
-                    {formatDate(transaction.created_at)}
+                    {Number(transaction.debt)} $
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Soat:</span>
+                  <span className="font-semibold text-[13px]">
+                    {formatDateTime(transaction.created_at).hour}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Sana:</span>
+                  <span className="font-semibold text-[13px]">
+                    {formatDateTime(transaction.created_at).date}
                   </span>
                 </div>
               </CardContent>

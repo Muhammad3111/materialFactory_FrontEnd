@@ -6,8 +6,9 @@ export const addTransaction = async (data: TransactionForm) => {
   return response.data;
 };
 
-export const getAllTransactions = async (phone?: string) => {
-  const response = await api.get(`/transactions?phone=${phone}`);
+export const getAllTransactions = async (phone: string) => {
+  const encodePhone = encodeURIComponent(phone);
+  const response = await api.get(`/transactions?phone=${encodePhone}`);
   if (response.status === 404) {
     return [];
   } else {

@@ -71,11 +71,15 @@ export default function Routers() {
             <Route path="/notifications" element={<Notification />} />
           </>
         )}
-
+        {(isAdmin || isHamkor) && (
+          <>
+            <Route path="/transactions/add" element={<AddTransaction />} />
+            <Route path="/inventory" element={<Inventory />} />
+          </>
+        )}
         {/* Ishchi */}
         {(isStaff || isHamkor) && (
           <>
-            <Route path="/dashboard" element={<StaffDashboard />} />
             <Route
               path="/inventory/add-product"
               element={<AddProductToInventory />}
@@ -83,6 +87,8 @@ export default function Routers() {
             <Route path="/transactions/user" element={<TransactionById />} />
           </>
         )}
+
+        {isStaff && <Route path="/dashboard" element={<StaffDashboard />} />}
 
         {/* Har qanday roldagi user */}
         <Route path="/profile" element={<ProfileDetails />} />

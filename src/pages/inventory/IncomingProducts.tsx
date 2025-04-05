@@ -4,15 +4,18 @@ import { getIncomingProducts } from "@/features/inventroyLogs/inventoryLogs";
 import { useQuery } from "@tanstack/react-query";
 import { Ellipsis } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/hooks/useUser";
 
 export default function IncomingProducts() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["invetoryLogs"],
-    queryFn: getIncomingProducts,
-  });
-
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  const partnerParam = user?.role === "partner" ? user?.id : "";
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["invetoryLogs", partnerParam],
+    queryFn: () => getIncomingProducts(partnerParam!),
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Xatolik yuz berdi!</div>;

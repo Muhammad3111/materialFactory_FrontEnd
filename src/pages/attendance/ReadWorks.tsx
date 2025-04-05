@@ -1,14 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
 import { getWorkById } from "@/features/addWork/addWork";
 import { useUser } from "@/hooks/useUser"; // Context hook’ini chaqirish
 
 export default function ReadWorks() {
-  const { user } = useUser(); // Contextdan user olish
-  const [search, setSearch] = useState("");
+  const { user } = useUser(); // Contextdan user olis
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useQuery({
@@ -23,10 +20,6 @@ export default function ReadWorks() {
 
   const works: Works[] = data || [];
 
-  const filteredWorks = works.filter((work) =>
-    work.user_name?.toLowerCase().includes(search.toLowerCase())
-  );
-
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
     return `${String(date.getDate()).padStart(2, "0")}/${String(
@@ -36,15 +29,9 @@ export default function ReadWorks() {
 
   return (
     <div className="pt-16 px-4 flex flex-col gap-4">
-      <Input
-        placeholder="Ishchi izlash..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredWorks.length > 0 ? (
-          filteredWorks.map((work) => (
+        {works.length > 0 ? (
+          works.map((work) => (
             <Card
               key={work.id}
               onClick={() => navigate(`/works/${work.id}`)}

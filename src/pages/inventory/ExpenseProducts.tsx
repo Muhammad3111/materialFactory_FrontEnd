@@ -4,22 +4,26 @@ import { getOutgoingProducts } from "@/features/inventroyLogs/inventoryLogs";
 import { useQuery } from "@tanstack/react-query";
 import { Ellipsis } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/hooks/useUser";
 
 export default function OutgoingProducts() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["inventoryLogs"],
-    queryFn: getOutgoingProducts,
-  });
-
+  const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+
+  const partnerParam = user?.role === "partner" ? user?.id : "";
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["inventoryLogs", partnerParam],
+    queryFn: () => getOutgoingProducts(partnerParam!),
+    enabled: !!user, // faqat user mavjud bo‘lsa ishlaydi
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Xatolik yuz berdi!</div>;
 
   const outgoingProducts: InventoryProduct[] = data || [];
 
-  // 🔍 Qidiruv bo‘yicha filter
   const filteredIncoming = outgoingProducts.filter(
     (item) =>
       item.product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
