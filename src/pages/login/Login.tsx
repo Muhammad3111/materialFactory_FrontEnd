@@ -32,7 +32,7 @@ const Login = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      await api.post("/auth/login", data); // Login request yuboramiz
+      await api.post("/auth/login", data, { withCredentials: true }); // Login request yuboramiz
 
       const response = await api.get("/users/me"); // User ma'lumotlarini olish
       setUser(response.data); // Statega saqlaymiz
