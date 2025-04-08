@@ -17,14 +17,14 @@ export default function Dashboard() {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-20 px-4">
       <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
         <Boxes size={48} />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-left">
           <h1 className="text-base font-semibold">Mahsulotlar</h1>
           <p className="text-lg font-semibold">
             {stats.total_products_quantity}
           </p>
         </div>
       </div>
-      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
+      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4 text-left">
         <CircleDollarSign size={48} />
         <div className="flex flex-col gap-2">
           <h1 className="text-base font-semibold">Jami mahsulotlar narxi</h1>
@@ -33,7 +33,7 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
-      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
+      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4 text-left">
         <div className="flex flex-col gap-2 w-full">
           <h1 className="text-lg font-semibold">Kirib kelgan mahsulotlar</h1>
           <div className="grid grid-cols-2 gap-y-2">
@@ -52,7 +52,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
+      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4 text-left">
         <div className="flex flex-col gap-2 w-full">
           <h1 className="text-lg font-semibold">Chiqib ketgan mahsulotlar</h1>
           <div className="grid grid-cols-2 gap-y-2">
@@ -71,7 +71,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
+      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4 text-left">
         <PackageOpen size={48} />
         <div className="flex flex-col gap-2">
           <h1 className="text-base font-semibold">Jami kamomat</h1>
@@ -82,7 +82,7 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
-      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
+      <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4 text-left">
         <Wallet size={48} />
         <div className="flex flex-col gap-2">
           <h1 className="text-base font-semibold">Xarajatlar</h1>
