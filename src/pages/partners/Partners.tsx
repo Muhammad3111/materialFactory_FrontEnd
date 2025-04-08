@@ -24,7 +24,7 @@ export default function Partners() {
   );
 
   return (
-    <div className="pt-16 px-4 flex flex-col gap-4">
+    <div className="py-20 px-4 flex flex-col gap-4">
       <Input
         type="text"
         placeholder="Hamkor izlash..."
@@ -62,11 +62,13 @@ export default function Partners() {
                     <Ellipsis size={24} className="text-gray-600" />
                   </button>
                 </div>
-                <div>
-                  <span>Telefon:</span> {partner.phone}
+                <div className="flex gap-2">
+                  <span>Telefon:</span>
+                  <span className="font-semibold">{partner.phone}</span>
                 </div>
-                <div>
-                  <span>Manzil:</span> {partner.address}
+                <div className="flex gap-2">
+                  <span>Manzil:</span>
+                  <span className="font-semibold">{partner.address}</span>
                 </div>
               </div>
             </div>

@@ -1,11 +1,6 @@
 import { getInvetoryStats } from "@/features/inventoryStats/inventoryStats";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Boxes,
-  CircleDollarSign,
-  PackageOpen,
-  Wallet,
-} from "lucide-react";
+import { Boxes, CircleDollarSign, PackageOpen, Wallet } from "lucide-react";
 
 export default function Dashboard() {
   const { data, isLoading, isError } = useQuery({
@@ -19,7 +14,7 @@ export default function Dashboard() {
   const stats: StockSummary = data;
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pt-18 px-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-20 px-4">
       <div className="p-4 rounded-2xl bg-white shadow-md border flex items-center gap-4">
         <Boxes size={48} />
         <div className="flex flex-col gap-2">

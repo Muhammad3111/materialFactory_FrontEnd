@@ -1,7 +1,6 @@
 import CheckInButton from "../attendance/CheckIn";
 import CheckOutButton from "../attendance/CheckOut";
 import DailyWorkForm from "../attendance/DailyWorkForm";
-import ReadWorks from "../attendance/ReadWorks";
 
 export default function StaffDashboard() {
   return (
@@ -12,7 +11,6 @@ export default function StaffDashboard() {
         <CheckInButton />
         <CheckOutButton />
         <DailyWorkForm />
-        <ReadWorks />
       </div>
     </div>
   );

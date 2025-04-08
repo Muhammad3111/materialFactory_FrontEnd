@@ -56,33 +56,39 @@ export default function Notification() {
   return (
     <div className="pt-20 pb-24 flex flex-col gap-3 px-5">
       <AnimatePresence>
-        {notifications.map((n, i) => {
-          const { text, icon, bg } = getStyle(n.type);
-          const key =
-            typeof n.timestamp === "string"
-              ? n.timestamp + i
-              : n.timestamp.toISOString() + i;
+        {notifications.length > 0 ? (
+          notifications.map((n, i) => {
+            const { text, icon, bg } = getStyle(n.type);
+            const key =
+              typeof n.timestamp === "string"
+                ? n.timestamp + i
+                : n.timestamp.toISOString() + i;
 
-          return (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className={`relative ${bg} border px-4 py-3 rounded-lg flex items-start gap-3 shadow-md`}
-            >
-              <div className="pt-1">{icon}</div>
-              <div className="flex-1 text-sm font-medium">{text}</div>
-              <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-black"
-                onClick={() => console.log("O‘chirish tugmasi bosildi")}
+            return (
+              <motion.div
+                key={key}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className={`relative ${bg} border px-4 py-3 rounded-lg flex items-start gap-3 shadow-md`}
               >
-                <X size={16} />
-              </button>
-            </motion.div>
-          );
-        })}
+                <div className="pt-1">{icon}</div>
+                <div className="flex-1 text-sm font-medium">{text}</div>
+                <button
+                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
+                  onClick={() => console.log("O‘chirish tugmasi bosildi")}
+                >
+                  <X size={16} />
+                </button>
+              </motion.div>
+            );
+          })
+        ) : (
+          <p className="text-center text-gray-500">
+            Sizda hech qanday xabar mavjud emas 😕
+          </p>
+        )}
       </AnimatePresence>
     </div>
   );

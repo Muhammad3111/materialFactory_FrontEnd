@@ -25,8 +25,11 @@ const Navbar = () => {
       </NavLink>
 
       {/* Markazda Logo */}
-      <Link to="/" className="text-xl font-bold text-gray-800">
-        MyLogo
+      <Link
+        to="https://xdata.uz/"
+        className="text-xl font-bold text-green-600 "
+      >
+        <span className="text-black text-2xl">X</span>track
       </Link>
 
       {/* O'ng tomonda User Profile */}

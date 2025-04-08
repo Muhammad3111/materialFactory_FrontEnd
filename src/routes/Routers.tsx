@@ -24,6 +24,8 @@ import Transactions from "@/pages/transactions/Transactions";
 import AddTransaction from "@/pages/transactions/AddTransaction";
 import TransactionById from "@/pages/transactions/TransactionById";
 import Notification from "@/pages/notification/Notification";
+import AttendanceTable from "@/pages/attendance/ReadAttandance";
+import ReadWorks from "@/pages/attendance/ReadWorks";
 
 export default function Routers() {
   const { user } = useUser();
@@ -69,6 +71,8 @@ export default function Routers() {
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/transactions/add" element={<AddTransaction />} />
             <Route path="/notifications" element={<Notification />} />
+            <Route path="/attandace" element={<AttendanceTable />} />
+            <Route path="/works-report" element={<ReadWorks />} />
           </>
         )}
         {(isAdmin || isHamkor) && (

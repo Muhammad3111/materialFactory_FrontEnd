@@ -8,6 +8,8 @@ import {
   X,
   LogOut,
   Users,
+  CalendarDays,
+  ScrollText,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axiosIntstance";
@@ -88,6 +90,20 @@ export default function ProfileMenu() {
                       className="flex items-center gap-2 text-lg hover:text-blue-500 transition"
                     >
                       <Users /> Xodimlar
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("/attandace")}
+                      className="flex items-center gap-2 text-lg hover:text-blue-500 transition"
+                    >
+                      <CalendarDays />
+                      Keldi-Ketdi hisoboti
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("/works-report")}
+                      className="flex items-center gap-2 text-lg hover:text-blue-500 transition"
+                    >
+                      <ScrollText />
+                      Ish hisoboti
                     </button>
                   </div>
                 )}

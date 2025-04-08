@@ -1,68 +1,109 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { getWorkById } from "@/features/addWork/addWork";
-import { useUser } from "@/hooks/useUser"; // Context hook’ini chaqirish
+import { getAllWorks } from "@/features/addWork/addWork";
 
-export default function ReadWorks() {
-  const { user } = useUser(); // Contextdan user olis
-  const navigate = useNavigate();
+const months = [
+  "Yanvar",
+  "Fevral",
+  "Mart",
+  "Aprel",
+  "May",
+  "Iyun",
+  "Iyul",
+  "Avgust",
+  "Sentabr",
+  "Oktabr",
+  "Noyabr",
+  "Dekabr",
+];
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["works", user?.id],
-    queryFn: () => getWorkById(user?.id?.toString() || ""), // user bo'lmasa bo'sh string yuboriladi
-    enabled: !!user?.id, // faqat user mavjud bo‘lsa query ishga tushadi
+type Entry = {
+  id: number;
+  type: string;
+  amount: string;
+  user: { id: number; fullname: string };
+  created_at: string;
+};
+
+type GroupedData = {
+  [date: string]: Entry[];
+};
+
+const groupByDate = (data: Entry[]): GroupedData => {
+  return data.reduce((acc, entry) => {
+    const date = entry.created_at.split("T")[0]; // "2025-04-07"
+    if (!acc[date]) acc[date] = [];
+    acc[date].push(entry);
+    return acc;
+  }, {} as GroupedData);
+};
+
+const ReadWorks = () => {
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const { data, isLoading } = useQuery({
+    queryKey: ["works"],
+    queryFn: getAllWorks,
   });
 
-  if (isLoading) return <div className="pt-16 text-center">Yuklanmoqda...</div>;
-  if (isError)
-    return <div className="pt-16 text-center">Xatolik yuz berdi</div>;
+  if (isLoading) return <div>Yuklanmoqda...</div>;
 
-  const works: Works[] = data || [];
+  // Filtering data based on selected month
+  const filteredData = data.filter((entry: any) => {
+    const entryMonth = new Date(entry.created_at).getMonth();
+    return entryMonth === selectedMonth;
+  });
 
-  const formatDate = (isoDate: string) => {
-    const date = new Date(isoDate);
-    return `${String(date.getDate()).padStart(2, "0")}/${String(
-      date.getMonth() + 1
-    ).padStart(2, "0")}/${date.getFullYear()}`;
-  };
+  const grouped = groupByDate(filteredData);
 
   return (
-    <div className="pt-16 px-4 flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {works.length > 0 ? (
-          works.map((work) => (
-            <Card
-              key={work.id}
-              onClick={() => navigate(`/works/${work.id}`)}
-              className="p-4 rounded-2xl bg-white shadow-md border cursor-pointer hover:shadow-lg transition"
+    <div className="py-16 px-4">
+      <div className="overflow-x-auto py-2">
+        <h1 className="text-lg font-semibold mb-4">Bajarilgan ishlar</h1>
+
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {months.map((month, index) => (
+            <button
+              key={month}
+              className={`px-4 py-2 rounded-md ${
+                selectedMonth === index
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setSelectedMonth(index)}
             >
-              <CardContent className="flex flex-col gap-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Ishchi:</span>
-                  <span className="font-semibold">{work.user_name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Ish soni:</span>
-                  <span className="font-semibold">{work.amount} ta</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Ish turi:</span>
-                  <span className="font-semibold">{work.type} sm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sana:</span>
-                  <span className="font-semibold">
-                    {formatDate(work.created_at || "")}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <p className="text-center text-gray-500">Ishlar topilmadi 😕</p>
-        )}
+              {month}
+            </button>
+          ))}
+        </div>
+
+        {Object.entries(grouped).map(([date, entries]) => (
+          <div key={date}>
+            <h2 className="text-sm font-semibold my-2">{date}</h2>
+            <table className="table-auto w-full border border-gray-300">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border px-4 py-2">Ishchi</th>
+                  <th className="border px-4 py-2">Ish Soni</th>
+                  <th className="border px-4 py-2">Ish turi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {entries.map((entry) => (
+                  <tr key={entry.id}>
+                    <td className="border px-4 py-2">{entry.user?.fullname}</td>
+                    <td className="border px-4 py-2">{entry.amount}</td>
+                    <td className="border px-4 py-2">{entry.type}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
+
+export default ReadWorks;
