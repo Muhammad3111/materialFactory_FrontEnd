@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +18,7 @@ import {
 import { getProducts } from "@/features/products/products";
 import { DeleteInventoryProduct } from "./DeleteInventoryProduct";
 import { getPartners } from "@/features/partners/partners";
+import { useEffect } from "react";
 
 export type UpdateInventoryProductForm = {
   id?: number;
@@ -56,15 +56,22 @@ export default function UpdateInventoryProduct() {
     register,
     handleSubmit,
     control,
-    reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<UpdateInventoryProductForm>();
 
   useEffect(() => {
     if (inventoryProductData) {
-      reset(inventoryProductData);
+      setValue("id", inventoryProductData.id);
+      setValue("product_id", inventoryProductData.product.id);
+      setValue("partner_id", inventoryProductData.partner.id);
+      setValue("quantity", inventoryProductData.quantity);
+      setValue("price", inventoryProductData.price);
+      setValue("expense", inventoryProductData.expense);
+      setValue("flaw", inventoryProductData.flaw);
+      setValue("type", inventoryProductData.type);
     }
-  }, [inventoryProductData, reset]);
+  }, [inventoryProductData, setValue]);
 
   const mutation = useMutation({
     mutationFn: updateInventoryProduct,
@@ -79,11 +86,10 @@ export default function UpdateInventoryProduct() {
 
   const onSubmit = (data: UpdateInventoryProductForm) => {
     mutation.mutate(data);
+    console.log(data);
   };
 
   if (isLoading) return <div className="pt-16 text-center">Yuklanmoqda...</div>;
-
-  console.log(inventoryProductData);
 
   return (
     <div className="pt-16 flex flex-col items-center gap-6">
@@ -168,7 +174,6 @@ export default function UpdateInventoryProduct() {
             type="number"
             placeholder="Miqdor"
             {...register("quantity", {
-              required: "Miqdor shart",
               valueAsNumber: true,
             })}
           />
@@ -182,7 +187,7 @@ export default function UpdateInventoryProduct() {
             type="number"
             step="any"
             placeholder="Narxi (1 dona uchun)"
-            {...register("price", { required: "Narx shart" })}
+            {...register("price")}
           />
           {errors.price && (
             <p className="text-red-500 text-sm">{errors.price.message}</p>
@@ -193,7 +198,7 @@ export default function UpdateInventoryProduct() {
           <Input
             type="number"
             placeholder="Xarajat summasi"
-            {...register("expense", { required: "Xarajat summasi shart" })}
+            {...register("expense")}
           />
           {errors.expense && (
             <p className="text-red-500 text-sm">{errors.expense.message}</p>
@@ -205,7 +210,7 @@ export default function UpdateInventoryProduct() {
             type="number"
             step="any"
             placeholder="Brak (flaw) miqdori"
-            {...register("flaw", { required: "Brak miqdori shart" })}
+            {...register("flaw")}
           />
           {errors.flaw && (
             <p className="text-red-500 text-sm">{errors.flaw.message}</p>
@@ -216,7 +221,6 @@ export default function UpdateInventoryProduct() {
           <Controller
             name="type"
             control={control}
-            rules={{ required: "Turini tanlash shart" }}
             render={({ field }) => (
               <Select
                 onValueChange={field.onChange}

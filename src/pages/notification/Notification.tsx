@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUser } from "@/hooks/useUser";
 
 export default function Notification() {
-  const { notifications } = useUser();
+  const { notifications, removeNotification } = useUser();
 
   const getStyle = (type: string) => {
     switch (type) {
@@ -77,7 +77,7 @@ export default function Notification() {
                 <div className="flex-1 text-sm font-medium">{text}</div>
                 <button
                   className="absolute top-2 right-2 text-gray-500 hover:text-black"
-                  onClick={() => console.log("O‘chirish tugmasi bosildi")}
+                  onClick={() => removeNotification(i)}
                 >
                   <X size={16} />
                 </button>

@@ -19,6 +19,7 @@ interface UserContextType {
   setUser: (user: Users | null) => void;
   logout: () => void;
   notifications: NotificationItem[];
+  removeNotification: (identifier: string | number) => void;
 }
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -87,10 +88,25 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("notifications");
   };
 
+  const removeNotification = (identifier: string | number) => {
+    setNotifications((prevNotifications) => {
+      const updated = prevNotifications.filter((item, index) => {
+        return typeof identifier === "number"
+          ? index !== identifier
+          : item.timestamp !== identifier;
+      });
+
+      localStorage.setItem("notifications", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   if (initializing) return <div>Yuklanmoqda...</div>;
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, notifications }}>
+    <UserContext.Provider
+      value={{ user, setUser, logout, notifications, removeNotification }}
+    >
       {children}
     </UserContext.Provider>
   );

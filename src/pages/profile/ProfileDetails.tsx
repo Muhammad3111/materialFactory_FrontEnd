@@ -8,15 +8,27 @@ import { toast } from "react-toastify";
 import { updateUser } from "@/features/users/users";
 import { useUser } from "@/hooks/useUser";
 
+const keyTranslationMap: Record<string, string> = {
+  id: "ID",
+  fullname: "To‘liq ism",
+  phone: "Telefon raqam",
+  role: "Roli",
+  created_at: "Yaratilgan sana",
+  salary_type: "Maosh turi",
+  salary_amount: "Maosh miqdori",
+  final_salary: "Yakuniy maosh",
+  total_hours: "Jami ish soatlari",
+  total_output_products: "Chiqarilgan mahsulotlar soni",
+  total_received: "Olingan mablag‘",
+};
+
 export default function ProfileDetails() {
   const [editMode, setEditMode] = useState(false);
   const queryClient = useQueryClient();
   const { user } = useUser(); // user context orqali olinadi
 
   const { register, handleSubmit } = useForm<User>({
-    defaultValues: user
-      ? { ...user, id: Number(user.id) }
-      : undefined,
+    defaultValues: user ? { ...user, id: Number(user.id) } : undefined,
   });
 
   const mutation = useMutation({
@@ -45,11 +57,12 @@ export default function ProfileDetails() {
   if (!user)
     return <div className="pt-18 text-center">Ma'lumot topilmadi.</div>;
 
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="pt-18 relative px-4">
       <div className="flex items-center justify-between my-4">
         <h2 className="text-xl font-bold">Profil ma'lumotlari</h2>
-        {!editMode && (
+        {!editMode && user.role === "admin" && (
           <Button
             onClick={() => setEditMode(true)}
             variant="outline"
@@ -65,10 +78,11 @@ export default function ProfileDetails() {
         {Object.entries(user).map(([key, value]) => {
           const displayValue =
             key === "created_at" ? formatDate(value as string) : value;
+          
           return (
             <div key={key} className="flex justify-between items-center">
               <span className="font-medium capitalize">
-                {key.replace(/_/g, " ")}:
+                {keyTranslationMap[key] || key.replace(/_/g, " ")}:
               </span>
               {!editMode ? (
                 <span className="text-gray-700 text-right max-w-[50%] break-words">
