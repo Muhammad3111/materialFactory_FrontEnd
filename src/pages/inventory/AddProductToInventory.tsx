@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import { getProducts } from "@/features/products/products";
 import { addProductToInventory } from "@/features/inventroyLogs/inventoryLogs";
 import { getPartners } from "@/features/partners/partners";
+import { useRef } from "react";
+import { getUSDCurrency } from "@/features/currency/currency";
 
 export type InventoryProductForm = {
   product_id: number;
@@ -31,10 +33,14 @@ export default function AddProductToInventory() {
     control,
     reset,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm<InventoryProductForm>();
 
   const queryClient = useQueryClient();
 
+  // bu kursni API'dan olib dinamik qilsa ham bo'ladi
+
+  const uzsAmountRef = useRef<HTMLInputElement>(null);
   // Mahsulotlarni olish uchun query
   const { data: products, isLoading: productsLoading } = useQuery({
     queryKey: ["products"],
@@ -44,6 +50,11 @@ export default function AddProductToInventory() {
   const { data: partners, isLoading: partnersLoading } = useQuery({
     queryKey: ["partners"],
     queryFn: getPartners,
+  });
+
+  const { data, isLoading: currencyLoading } = useQuery({
+    queryKey: ["currency"],
+    queryFn: getUSDCurrency,
   });
 
   const mutation = useMutation({
@@ -58,6 +69,11 @@ export default function AddProductToInventory() {
     },
   });
 
+  if (currencyLoading) {
+    return <h1>Yuklanmoqda...</h1>;
+  }
+
+  const uzsToUsdRate = data[0].Rate;
   const onSubmit = (data: InventoryProductForm) => {
     mutation.mutate(data);
   };
@@ -163,6 +179,22 @@ export default function AddProductToInventory() {
           {errors.quantity && (
             <p className="text-red-500 text-sm">{errors.quantity.message}</p>
           )}
+        </div>
+
+        <div>
+          <Input
+            type="number"
+            step="any"
+            placeholder="Narx (UZS da)"
+            ref={uzsAmountRef}
+            onChange={(e) => {
+              const uzsVal = parseFloat(e.target.value);
+              if (!isNaN(uzsVal)) {
+                const calculatedPrice = uzsVal / uzsToUsdRate;
+                setValue("price", calculatedPrice.toFixed(2));
+              }
+            }}
+          />
         </div>
 
         <div>
