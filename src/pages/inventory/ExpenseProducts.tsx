@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getOutgoingProducts } from "@/features/inventroyLogs/inventoryLogs";
 import { useQuery } from "@tanstack/react-query";
-import { Ellipsis } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Download, Ellipsis } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
+import { generatePdf } from "@/components/pdf/generetaPdf";
 
 export default function OutgoingProducts() {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
+  const location = useLocation();
   const partnerParam = user?.role === "partner" ? user?.id : "";
 
   const { data, isLoading, isError } = useQuery({
@@ -18,6 +19,13 @@ export default function OutgoingProducts() {
     queryFn: () => getOutgoingProducts(partnerParam!),
     enabled: !!user, // faqat user mavjud bo‘lsa ishlaydi
   });
+
+  useEffect(() => {
+    const partnerName = location.state?.partner;
+    if (partnerName) {
+      setSearchQuery(partnerName);
+    }
+  }, [location.state]);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Xatolik yuz berdi!</div>;
@@ -39,6 +47,23 @@ export default function OutgoingProducts() {
     ).padStart(2, "0")}/${date.getFullYear()}`;
   };
 
+  const shareFile = async (
+    e: MouseEvent<HTMLButtonElement>,
+    item: InventoryProduct
+  ) => {
+    e.stopPropagation(); // kartani ochilishiga to‘sqinlik qiladi
+
+    // Faylni ko‘rsatish uchun ochiladi
+    const pdfBlob = generatePdf(item);
+    const blobUrl = URL.createObjectURL(pdfBlob);
+
+    // Faylni avtomatik yuklab olish
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = "chiqim-check.pdf";
+    a.click();
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* 🔍 Qidiruv input */}
@@ -48,6 +73,7 @@ export default function OutgoingProducts() {
           placeholder="Mahsulot, foydalanuvchi yoki hamkor nomi bo‘yicha izlash..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-black"
         />
       </div>
 
@@ -80,7 +106,7 @@ export default function OutgoingProducts() {
                 </div>
 
                 <div className="flex gap-2 items-center">
-                  <span>Operator:</span>
+                  <span>Xodim:</span>
                   <span className="font-semibold">{item.user_name}</span>
                 </div>
 
@@ -115,11 +141,19 @@ export default function OutgoingProducts() {
                       {Number(item.expense)} $
                     </span>
                   </div>
-                  <div className="flex gap-2 items-center">
-                    <span>Sana:</span>
-                    <span className="font-semibold">
-                      {formatDate(item.created_at || "")}
-                    </span>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-2 items-center">
+                      <span>Sana:</span>
+                      <span className="font-semibold">
+                        {formatDate(item.created_at || "")}
+                      </span>
+                    </div>
+                    <button
+                      onClick={async (e) => shareFile(e, item)}
+                      className="text-black"
+                    >
+                      <Download size={20} />
+                    </button>
                   </div>
                 </div>
               </div>

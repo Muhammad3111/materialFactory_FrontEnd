@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, ReactNode, useRef } from "react";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:5000", {
+const socket = io("https://api.marlin.uz", {
   path: "/socket.io",
   transports: ["websocket"],
   withCredentials: true,
@@ -30,10 +30,18 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const soundRef = useRef(new Audio("./sound/notification.mp3"));
 
+  // Role asosida validatsiya
+  const isValidUser = (data: any): data is Users => {
+    return data && ["admin", "ishchi", "partner"].includes(data.role);
+  };
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUserState(JSON.parse(storedUser));
+      const parsed = JSON.parse(storedUser);
+      if (isValidUser(parsed)) {
+        setUserState(parsed);
+      }
     }
 
     const storedNotifications = localStorage.getItem("notifications");

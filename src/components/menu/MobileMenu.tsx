@@ -1,11 +1,5 @@
 import { NavLink } from "react-router-dom";
-import {
-  Home,
-  Box,
-  Archive,
-  UserRoundCheck,
-  ArrowRightLeft,
-} from "lucide-react";
+import { Home, Archive, UserRoundCheck, ArrowRightLeft } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
 
 const MobileMenu = () => {
@@ -13,9 +7,9 @@ const MobileMenu = () => {
 
   const menuItems = [
     {
-      path: "/products",
-      icon: <Box size={24} />,
-      label: "Mahsulotlar",
+      path: "/",
+      icon: <Home size={24} />,
+      label: "Bosh sahifa",
       roles: ["admin"],
     },
     {
@@ -23,12 +17,6 @@ const MobileMenu = () => {
       icon: <Archive size={24} />,
       label: "Ombor",
       roles: ["admin", "ishchi", "partner"],
-    },
-    {
-      path: "/",
-      icon: <Home size={24} />,
-      label: "Bosh sahifa",
-      roles: ["admin"],
     },
     {
       path: "/dashboard",

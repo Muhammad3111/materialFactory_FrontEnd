@@ -55,7 +55,7 @@ const Login = () => {
       <Card className="w-full max-w-sm bg-white shadow-lg rounded-xl">
         <CardContent className="p-6 flex flex-col items-center">
           <h1 className="text-2xl font-semibold mb-4">Kirish</h1>
-          <img src="/login-image.svg" alt="Login" className="w-32 h-32 mb-4" />
+          <img src="/pwa-512x512.png" alt="Login" className="w-32 h-32 mb-4" />
           <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
             <div>
               <Input

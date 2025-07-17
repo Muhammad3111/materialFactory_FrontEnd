@@ -10,6 +10,8 @@ import {
   Users,
   CalendarDays,
   ScrollText,
+  Box,
+  NotepadText,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axiosIntstance";
@@ -104,6 +106,20 @@ export default function ProfileMenu() {
                     >
                       <ScrollText />
                       Ish hisoboti
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("/products")}
+                      className="flex items-center gap-2 text-lg hover:text-blue-500 transition"
+                    >
+                      <Box />
+                      Mahsulotlar
+                    </button>
+                    <button
+                      onClick={() => handleNavigate("/report-inventory")}
+                      className="flex items-center gap-2 text-lg hover:text-blue-500 transition"
+                    >
+                      <NotepadText />
+                      Ombor hisoboti
                     </button>
                   </div>
                 )}

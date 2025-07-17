@@ -13,9 +13,11 @@ import {
 import { addTransaction } from "@/features/transactions/transactions";
 import { getUsers } from "@/features/users/users";
 import { getPartners } from "@/features/partners/partners";
+import { useRef } from "react";
+import { getUSDCurrency } from "@/features/currency/currency";
 
 export type TransactionForm = {
-  amount: number;
+  amount: string;
   type: "income" | "expense";
   description: string;
   user_id?: number;
@@ -28,11 +30,12 @@ export default function AddTransaction() {
     handleSubmit,
     control,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<TransactionForm>();
 
   const queryClient = useQueryClient();
-
+  const uzsAmountRef = useRef<HTMLInputElement>(null);
   const { data: users, isLoading: usersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
@@ -41,6 +44,11 @@ export default function AddTransaction() {
   const { data: partners, isLoading: partnersLoading } = useQuery({
     queryKey: ["partners"],
     queryFn: getPartners,
+  });
+
+  const { data, isLoading: currencyLoading } = useQuery({
+    queryKey: ["currency"],
+    queryFn: getUSDCurrency,
   });
 
   const mutation = useMutation({
@@ -63,6 +71,12 @@ export default function AddTransaction() {
   const watchedUserId = useWatch({ control, name: "user_id" });
   const watchedPartnerId = useWatch({ control, name: "partner_id" });
 
+  if (currencyLoading) {
+    return <h1>Yuklanmoqda...</h1>;
+  }
+
+  const uzsToUsdRate = data[0].Rate;
+
   return (
     <div className="pt-16 flex flex-col items-center gap-6">
       <h1 className="text-xl font-bold">Tranzaksiya qo‘shish</h1>
@@ -73,10 +87,25 @@ export default function AddTransaction() {
         <div>
           <Input
             type="number"
+            step="any"
+            placeholder="Narx (UZS da)"
+            ref={uzsAmountRef}
+            onChange={(e) => {
+              const uzsVal = parseFloat(e.target.value);
+              if (!isNaN(uzsVal)) {
+                const calculatedPrice = uzsVal / uzsToUsdRate;
+                setValue("amount", calculatedPrice.toFixed(2));
+              }
+            }}
+          />
+        </div>
+        <div>
+          <Input
+            type="number"
+            step="any"
             placeholder="Summani kiriting"
             {...register("amount", {
               required: "Summani kiritish shart",
-              valueAsNumber: true,
             })}
           />
           {errors.amount && (

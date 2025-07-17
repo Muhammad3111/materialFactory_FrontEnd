@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { addPartner } from "@/features/partners/partners";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function AddPartner() {
   const {
@@ -13,7 +15,7 @@ export default function AddPartner() {
     watch,
     formState: { errors, isSubmitting },
   } = useForm<Partners>({ defaultValues: { role: "partner" } });
-
+  const [show, setShow] = useState(false);
   const queryClient = useQueryClient();
   const passwordValue = watch("password");
 
@@ -75,9 +77,9 @@ export default function AddPartner() {
           <p className="text-red-500 text-sm">{errors.phone.message}</p>
         )}
 
-        <div>
+        <div className="relative">
           <Input
-            type="password"
+            type={show ? "text" : "password"}
             placeholder="Parol kiriting"
             {...register("password", {
               required: "Parol shart",
@@ -93,6 +95,19 @@ export default function AddPartner() {
               },
             })}
           />
+          {!show ? (
+            <Eye
+              className="absolute top-2.5 right-2 cursor-pointer"
+              size={18}
+              onClick={() => setShow(!show)}
+            />
+          ) : (
+            <EyeOff
+              className="absolute top-2.5 right-2 cursor-pointer"
+              size={18}
+              onClick={() => setShow(!show)}
+            />
+          )}
           {errors.password && (
             <p className="text-red-500 text-sm">{errors.password.message}</p>
           )}

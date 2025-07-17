@@ -29,7 +29,7 @@ export default function Inventory() {
   }
 
   return (
-    <div className="pt-18 pb-24 px-4">
+    <div className="pt-18 pb-24 px-4 h-screen overflow-y-auto bg-green-100">
       <div className="fixed bottom-25 right-4">
         <button
           className="bg-blue-500 text-white rounded-full text-lg p-2"
@@ -40,9 +40,19 @@ export default function Inventory() {
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
-        <TabsList className="w-full border">
-          <TabsTrigger value="income">Kirim</TabsTrigger>
-          <TabsTrigger value="expense">Chiqim</TabsTrigger>
+        <TabsList className="w-full border border-black">
+          <TabsTrigger
+            value="income"
+            className="data-[state=active]:bg-green-500 data-[state=active]:text-white"
+          >
+            Kirim
+          </TabsTrigger>
+          <TabsTrigger
+            value="expense"
+            className="data-[state=active]:bg-red-500 data-[state=active]:text-white"
+          >
+            Chiqim
+          </TabsTrigger>
         </TabsList>
       </Tabs>
 

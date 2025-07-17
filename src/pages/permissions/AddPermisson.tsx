@@ -78,25 +78,33 @@ export default function AddPermission() {
 
         {/* Switchlar */}
         <div className="flex flex-col gap-4 mt-2">
-          {["can_read", "can_create", "can_update", "can_delete"].map(
-            (field) => (
+          {["read", "create", "update", "delete"].map((perm) => {
+            const uzLabels: Record<string, string> = {
+              read: "O‘qish",
+              create: "Yaratish",
+              update: "Tahrirlash",
+              delete: "O‘chirish",
+            };
+            const field = `can_${perm}` as keyof PermissionTypes;
+
+            return (
               <div
                 key={field}
                 className="flex justify-between items-center border-b pb-2"
               >
                 <span className="capitalize">
-                  {field.replace("can_", "").toUpperCase()}
+                  {uzLabels[perm]} ({perm})
                 </span>
                 <Controller
-                  name={field as keyof PermissionTypes}
+                  name={field}
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Switch checked={!!value} onCheckedChange={onChange} />
                   )}
                 />
               </div>
-            )
-          )}
+            );
+          })}
         </div>
 
         <Button

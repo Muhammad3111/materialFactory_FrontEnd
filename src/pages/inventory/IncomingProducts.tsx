@@ -1,22 +1,31 @@
-import { useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { getIncomingProducts } from "@/features/inventroyLogs/inventoryLogs";
 import { useQuery } from "@tanstack/react-query";
-import { Ellipsis } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Download, Ellipsis } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "@/hooks/useUser";
+import { generatePdf } from "@/components/pdf/generetaPdf";
 
 export default function IncomingProducts() {
   const { user } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-
+  const location = useLocation();
   const partnerParam = user?.role === "partner" ? user?.id : "";
   const { data, isLoading, isError } = useQuery({
     queryKey: ["invetoryLogs", partnerParam],
     queryFn: () => getIncomingProducts(partnerParam!),
   });
 
+  useEffect(() => {
+    const partnerName = location.state?.partner;
+    if (partnerName) {
+      setSearchQuery(partnerName);
+    }
+  }, [location.state]);
+
+  console.log(searchQuery);
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Xatolik yuz berdi!</div>;
 
@@ -38,6 +47,23 @@ export default function IncomingProducts() {
     ).padStart(2, "0")}/${date.getFullYear()}`;
   };
 
+  const shareFile = async (
+    e: MouseEvent<HTMLButtonElement>,
+    item: InventoryProduct
+  ) => {
+    e.stopPropagation(); // kartani ochilishiga to‘sqinlik qiladi
+
+    // Faylni ko‘rsatish uchun ochiladi
+    const pdfBlob = generatePdf(item);
+    const blobUrl = URL.createObjectURL(pdfBlob);
+
+    // Faylni avtomatik yuklab olish
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = "kirim-check.pdf";
+    a.click();
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* 🔍 Qidiruv input */}
@@ -47,6 +73,7 @@ export default function IncomingProducts() {
           placeholder="Mahsulot, foydalanuvchi yoki hamkor nomi bo‘yicha izlash..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-black"
         />
       </div>
 
@@ -79,7 +106,7 @@ export default function IncomingProducts() {
                 </div>
 
                 <div className="flex gap-2 items-center">
-                  <span>Operator:</span>
+                  <span>Xodim:</span>
                   <span className="font-semibold">{item.user_name}</span>
                 </div>
 
@@ -114,11 +141,19 @@ export default function IncomingProducts() {
                       {Number(item.expense)} $
                     </span>
                   </div>
-                  <div className="flex gap-2 items-center">
-                    <span>Sana:</span>
-                    <span className="font-semibold">
-                      {formatDate(item.created_at || "")}
-                    </span>
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-2 items-center">
+                      <span>Sana:</span>
+                      <span className="font-semibold">
+                        {formatDate(item.created_at || "")}
+                      </span>
+                    </div>
+                    <button
+                      onClick={async (e) => shareFile(e, item)}
+                      className="text-black"
+                    >
+                      <Download size={20} />
+                    </button>
                   </div>
                 </div>
               </div>

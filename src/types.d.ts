@@ -10,6 +10,7 @@ declare type StockSummary = {
   outgoing_flaw_quantity: string;
   average_flaw_percentage: string;
   total_warehouse_value: string;
+  product_stats_children: { unit: string; quantity: number }[];
 };
 
 declare type Product = {
@@ -27,7 +28,7 @@ declare type User = {
   fullname: string;
   phone: string;
   password?: string;
-  role: string;
+  role: "admin" | "ishchi";
   salary_type: "oylik" | "soatlik" | "ish_bay";
   salary_amount: string;
   total_hours: string;
@@ -42,6 +43,8 @@ declare type Partners = {
   name: string;
   phone: string;
   address: string;
+  debt: string;
+  credit: string;
   username: string;
   password: string;
   role: "partner";
@@ -54,6 +57,8 @@ declare type InventoryProduct = {
   user_name: string;
   type: "incoming" | "outgoing"; // Faqat kirim yoki chiqim
   quantity: number;
+  length_cm: number;
+  quantity_meters: number; // Santimetrda miqdor
   price: string;
   total_price: string;
   expense: string;
@@ -80,7 +85,7 @@ declare type Works = {
 
 declare type Transaction = {
   id?: number;
-  amount: number;
+  amount: string;
   type: "income" | "expense";
   description: string;
   user: null | { id: number; fullname: string };

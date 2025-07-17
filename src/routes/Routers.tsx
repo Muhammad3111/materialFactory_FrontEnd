@@ -26,6 +26,8 @@ import TransactionById from "@/pages/transactions/TransactionById";
 import Notification from "@/pages/notification/Notification";
 import AttendanceTable from "@/pages/attendance/ReadAttandance";
 import ReadWorks from "@/pages/attendance/ReadWorks";
+import Jumper from "@/pages/partners/Jumper";
+import ReportInventory from "@/pages/inventory/ReportInventory";
 
 export default function Routers() {
   const { user } = useUser();
@@ -62,9 +64,11 @@ export default function Routers() {
               element={<AddProductToInventory />}
             />
             <Route path="/inventory/:id" element={<UpdateInventoryProduct />} />
+            <Route path="/report-inventory" element={<ReportInventory />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/partners/add" element={<AddPartner />} />
             <Route path="/partners/:id" element={<UpdatePartner />} />
+            <Route path="/faster-links" element={<Jumper />} />
             <Route path="/permissions" element={<Permissions />} />
             <Route path="/permissions/add" element={<AddPermission />} />
             <Route path="/permissions/:id" element={<UpdatePermission />} />

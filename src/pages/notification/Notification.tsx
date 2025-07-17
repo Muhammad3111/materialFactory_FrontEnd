@@ -54,7 +54,7 @@ export default function Notification() {
   };
 
   return (
-    <div className="pt-20 pb-24 flex flex-col gap-3 px-5">
+    <div className="pt-20 pb-24 flex flex-col gap-3 px-5 h-screen overflow-y-auto bg-black">
       <AnimatePresence>
         {notifications.length > 0 ? (
           notifications.map((n, i) => {

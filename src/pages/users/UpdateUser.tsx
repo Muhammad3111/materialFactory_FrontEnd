@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { toast } from "react-toastify";
-import { updateUser } from "@/features/users/users";
+import { getUserById, updateUser } from "@/features/users/users";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { DeleteUser } from "./DeleteUser";
@@ -26,17 +26,19 @@ export default function UpdateUser() {
     formState: { errors, isSubmitting },
   } = useForm<User>();
   const { id } = useParams<{ id: string }>();
+  const { data, isLoading } = useQuery({
+    queryKey: ["users", id],
+    queryFn: () => getUserById(id!),
+  });
   const navigate = useNavigate();
   // localStorage'dan user ma'lumotlarini olish va formaga set qilish
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      Object.keys(parsedUser).forEach((key) => {
-        setValue(key as keyof User, parsedUser[key]);
+    if (data) {
+      Object.entries(data).forEach(([key, value]) => {
+        setValue(key as keyof User, value as any); // yoki value as string | number | null
       });
     }
-  }, [setValue]);
+  }, [data, setValue]);
 
   const queryClient = useQueryClient();
   const passwordValue = watch("password"); // 🔍 Parolni kuzatamiz
@@ -52,6 +54,10 @@ export default function UpdateUser() {
       toast.error("Foydalanuvchi qo‘shishda xatolik yuz berdi!");
     },
   });
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   const onSubmit = (data: User) => {
     mutation.mutate(data);
@@ -102,7 +108,6 @@ export default function UpdateUser() {
             type="password"
             placeholder="Parol kiriting"
             {...register("password", {
-              required: "Parol bo'lishi shart",
               minLength: {
                 value: 8,
                 message: "Parol kamida 8 ta belgidan iborat bo‘lishi kerak",
@@ -139,8 +144,6 @@ export default function UpdateUser() {
                 </SelectTrigger>
                 <SelectContent className="w-full">
                   <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="omborchi">Omborchi</SelectItem>
-                  <SelectItem value="sotuvchi">Sotuvchi</SelectItem>
                   <SelectItem value="ishchi">ishchi</SelectItem>
                 </SelectContent>
               </Select>

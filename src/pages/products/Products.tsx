@@ -33,7 +33,7 @@ export default function Products() {
   };
 
   return (
-    <div className="pt-18 px-4 flex flex-col gap-4">
+    <div className="py-20 px-4 flex flex-col gap-4 bg-amber-100 h-screen overflow-y-auto">
       {/* 🔍 Qidiruv input */}
       <div>
         <Input
@@ -41,6 +41,7 @@ export default function Products() {
           placeholder="Mahsulot izlash..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-black"
         />
       </div>
 
